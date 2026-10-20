@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Craques do LED</title>
+  <meta name="description" content="Jogo de futebol simples e divertido para crianças.">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <!-- Botão de som: sempre visível, começa desligado -->
+  <button id="btn-som" class="btn-som" aria-pressed="false" aria-label="Ligar o som">
+    <span class="icone-som">🔇</span><span class="texto-som">Som</span>
+  </button>
+
+  <!-- ===== Tela inicial ===== -->
+  <section id="tela-inicio" class="tela ativa">
+    <header class="topo-inicio">
+      <div class="bola-logo" aria-hidden="true">⚽</div>
+      <h1 class="titulo-led">Craques <span>do</span> LED</h1>
+      <p class="lema">Escolha como quer jogar!</p>
+    </header>
+    <div class="modos">
+      <button class="cartao-modo modo-solo" data-modo="solo">
+        <span class="modo-icone" aria-hidden="true">🧒 <small>x</small> 💻</span>
+        <span class="modo-nome">Partida Solo</span>
+        <span class="modo-sub">Você contra o computador</span>
+      </button>
+      <button class="cartao-modo modo-dois" data-modo="dois">
+        <span class="modo-icone" aria-hidden="true">🧒 <small>x</small> 👧</span>
+        <span class="modo-nome">2 Jogadores</span>
+        <span class="modo-sub">Dois amigos no mesmo teclado</span>
+      </button>
+      <button class="cartao-modo modo-penaltis" data-modo="penaltis">
+        <span class="modo-icone" aria-hidden="true">🥅 🖱️</span>
+        <span class="modo-nome">Pênaltis</span>
+        <span class="modo-sub">Só com o mouse</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== Configuração da partida ===== -->
+  <section id="tela-config" class="tela">
+    <header class="barra">
+      <button class="btn btn-voltar" data-ir="inicio"><span aria-hidden="true">⬅</span> Voltar</button>
+      <h2 id="config-titulo"></h2>
+    </header>
+    <div id="config-conteudo" class="config-conteudo"></div>
+    <div class="rodape-acoes">
+      <button id="btn-config-ok" class="btn btn-grande btn-verde"><span aria-hidden="true">▶</span> Continuar</button>
+    </div>
+  </section>
+
+  <!-- ===== Controles ===== -->
+  <section id="tela-controles" class="tela">
+    <header class="barra">
+      <button class="btn btn-voltar" data-ir="config"><span aria-hidden="true">⬅</span> Voltar</button>
+      <h2><span aria-hidden="true">🎮</span> Como jogar</h2>
+    </header>
+    <div id="controles-conteudo" class="controles-conteudo"></div>
+    <div class="rodape-acoes">
+      <button id="btn-comecar" class="btn btn-grande btn-verde"><span aria-hidden="true">⚽</span> Começar!</button>
+    </div>
+  </section>
+
+  <!-- ===== Partida ===== -->
+  <section id="tela-partida" class="tela tela-jogo">
+    <div class="hud">
+      <button class="btn btn-pausa" data-pausa><span aria-hidden="true">⏸️</span> Pausar</button>
+      <div class="placar">
+        <div class="time-hud time-hud-0"><span class="cor-hud"></span><span class="nome-hud"></span></div>
+        <div class="led-centro">
+          <div class="led-placar"><span id="gols-0">0</span><i>:</i><span id="gols-1">0</span></div>
+          <div class="led-tempo"><span aria-hidden="true">⏱</span> <span id="relogio">0:00</span></div>
+        </div>
+        <div class="time-hud time-hud-1"><span class="nome-hud"></span><span class="cor-hud"></span></div>
+      </div>
+    </div>
+    <div class="palco"><canvas id="canvas-partida" width="960" height="600"></canvas></div>
+    <div id="aviso-gol" class="aviso-gol" hidden>
+      <div class="gol-texto">GOOOL!</div>
+      <div class="gol-time"></div>
+    </div>
+  </section>
+
+  <!-- ===== Pênaltis ===== -->
+  <section id="tela-penaltis" class="tela tela-jogo">
+    <div class="hud">
+      <button class="btn btn-pausa" data-pausa><span aria-hidden="true">⏸️</span> Pausar</button>
+      <div class="placar placar-penaltis">
+        <div class="linha-pen" id="linha-pen-0"><span class="cor-hud"></span><span class="nome-hud"></span><span class="bolinhas"></span></div>
+        <div class="led-centro">
+          <div class="led-placar"><span id="pen-gols-0">0</span><i>:</i><span id="pen-gols-1">0</span></div>
+        </div>
+        <div class="linha-pen" id="linha-pen-1"><span class="cor-hud"></span><span class="nome-hud"></span><span class="bolinhas"></span></div>
+      </div>
+    </div>
+    <div id="faixa-penaltis" class="faixa-instrucao"></div>
+    <div class="palco"><canvas id="canvas-penaltis" width="960" height="600"></canvas></div>
+  </section>
+
+  <!-- ===== Resultado ===== -->
+  <section id="tela-final" class="tela">
+    <div class="confete-final" id="confete-final" aria-hidden="true"></div>
+    <div class="cartao-final">
+      <div class="trofeu" id="final-icone" aria-hidden="true">🏆</div>
+      <h2 id="final-titulo"></h2>
+      <div class="final-placar" id="final-placar"></div>
+      <p class="final-extra" id="final-extra"></p>
+      <p class="final-msg" id="final-msg"></p>
+      <div class="acoes-final">
+        <button id="btn-final-penaltis" class="btn btn-grande btn-laranja" hidden><span aria-hidden="true">🥅</span> Decidir nos pênaltis</button>
+        <button id="btn-final-denovo" class="btn btn-grande btn-verde"><span aria-hidden="true">🔁</span> Jogar de novo</button>
+        <button id="btn-final-inicio" class="btn btn-grande btn-azul"><span aria-hidden="true">🏠</span> Início</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pausa ===== -->
+  <div id="janela-pausa" class="janela" hidden>
+    <div class="cartao-janela">
+      <div class="janela-icone" aria-hidden="true">⏸️</div>
+      <h2>Pausado</h2>
+      <div class="acoes-janela">
+        <button id="btn-continuar" class="btn btn-grande btn-verde"><span aria-hidden="true">▶</span> Continuar</button>
+        <button id="btn-recomecar" class="btn btn-grande btn-laranja"><span aria-hidden="true">🔁</span> Recomeçar</button>
+        <button id="btn-sair" class="btn btn-grande btn-azul"><span aria-hidden="true">🏠</span> Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Aviso dos pênaltis (passar o mouse) ===== -->
+  <div id="janela-aviso" class="janela" hidden>
+    <div class="cartao-janela">
+      <div class="janela-icone" id="aviso-icone" aria-hidden="true"></div>
+      <h2 id="aviso-titulo"></h2>
+      <p id="aviso-texto" class="aviso-texto"></p>
+      <div class="acoes-janela">
+        <button id="btn-aviso-ok" class="btn btn-grande btn-verde"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/som.js"></script>
+  <script src="js/desenho.js"></script>
+  <script src="js/partida.js"></script>
+  <script src="js/penaltis.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
