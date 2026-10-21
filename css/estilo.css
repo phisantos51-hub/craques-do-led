@@ -252,26 +252,27 @@ button { font-family: inherit; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
+  gap: 18px;
   margin-top: 16px;
   max-width: 1150px;
 }
 .painel-controle {
   background: #fff;
   border-radius: 28px;
-  padding: 16px 26px 22px;
+  padding: 14px 18px 20px;
   box-shadow: var(--sombra);
   border-top: 16px solid var(--cor-time, #ccc);
   text-align: center;
-  min-width: 360px;
+  min-width: 320px;
 }
 .painel-controle h3 { margin: 4px 0 12px; font-size: 32px; }
-.grupo-teclas { display: flex; align-items: center; justify-content: center; gap: 26px; flex-wrap: wrap; }
+.painel-controle h3 small { display: block; font-size: 22px; color: #556; }
+.grupo-teclas { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
 .legenda-tecla { font-size: 24px; font-weight: bold; margin-top: 8px; }
 .cruz {
   display: grid;
-  grid-template-columns: repeat(3, 66px);
-  grid-template-rows: repeat(2, 66px);
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(2, 56px);
   gap: 6px;
 }
 .cruz .t-cima { grid-column: 2; grid-row: 1; }
@@ -279,8 +280,8 @@ button { font-family: inherit; }
 .cruz .t-baixo { grid-column: 2; grid-row: 2; }
 .cruz .t-dir { grid-column: 3; grid-row: 2; }
 .tecla {
-  min-width: 66px;
-  height: 66px;
+  min-width: 56px;
+  height: 56px;
   border-radius: 12px;
   background: linear-gradient(#ffffff, #e3e7ee);
   border: 3px solid #8f99a8;
@@ -292,10 +293,10 @@ button { font-family: inherit; }
   color: #1d2433;
   padding: 0 10px;
 }
-.tecla.larga { min-width: 230px; font-size: 24px; }
-.tecla.enter { min-width: 120px; font-size: 24px; }
+.tecla.larga { min-width: 150px; font-size: 22px; }
+.tecla.enter { min-width: 104px; font-size: 22px; }
 .ou { font-size: 26px; font-weight: bold; color: #667; margin: 10px 0; }
-.duas-opcoes { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; justify-content: center; }
+.duas-opcoes { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
 .dica-pausa { color: #fff; font-size: 24px; width: 100%; text-align: center; margin: 0; text-shadow: 0 2px 0 rgba(0,0,0,0.4); }
 .mouse-desenho { font-size: 90px; }
 .passos-pen { font-size: 26px; text-align: left; line-height: 1.6; margin: 0; padding-left: 0; list-style: none; }

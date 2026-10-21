@@ -13,20 +13,20 @@ const Partida = (() => {
   const NIVEIS = {
     facil:   { vel: 85,  gkVel: 60,  gkPega: 0.3,  gkRebate: 0.35, reacao: 0.6,  erro: 130, chute: 420, rouba: 0.15, dominio: 0.3,  alcance: 220, ajuda: 1.0 },
     medio:   { vel: 145, gkVel: 120, gkPega: 0.55, gkRebate: 0.7,  reacao: 0.3,  erro: 75,  chute: 520, rouba: 0.4,  dominio: 0.6,  alcance: 290, ajuda: 0.6 },
-    dificil: { vel: 182, gkVel: 165, gkPega: 0.75, gkRebate: 0.9,  reacao: 0.15, erro: 40,  chute: 610, rouba: 0.6,  dominio: 0.85, alcance: 330, ajuda: 0.3 },
+    dificil: { vel: 170, gkVel: 150, gkPega: 0.65, gkRebate: 0.8,  reacao: 0.18, erro: 45,  chute: 600, rouba: 0.5,  dominio: 0.8,  alcance: 320, ajuda: 0.5 },
   };
   // Colegas controlados pelo computador no time das crianças
   const COLEGA = { vel: 160, gkVel: 140, gkPega: 0.65, gkRebate: 0.85, reacao: 0.25, erro: 60, chute: 520, rouba: 0.45, dominio: 0.7, alcance: 300 };
   const HUMANO = { vel: 200, chute: 650, rouba: 0.8 };
 
   const TECLAS = [
-    { cima: ['KeyW'], baixo: ['KeyS'], esq: ['KeyA'], dir: ['KeyD'], chute: ['Space'] },
-    { cima: ['ArrowUp'], baixo: ['ArrowDown'], esq: ['ArrowLeft'], dir: ['ArrowRight'], chute: ['Enter', 'NumpadEnter'] },
+    { cima: ['KeyW'], baixo: ['KeyS'], esq: ['KeyA'], dir: ['KeyD'], chute: ['Space'], passe: ['KeyE'] },
+    { cima: ['ArrowUp'], baixo: ['ArrowDown'], esq: ['ArrowLeft'], dir: ['ArrowRight'], chute: ['Enter', 'NumpadEnter'], passe: ['KeyL'] },
   ];
   // No modo solo, a criança pode usar qualquer um dos dois conjuntos
   const TECLAS_SOLO = {
     cima: ['KeyW', 'ArrowUp'], baixo: ['KeyS', 'ArrowDown'], esq: ['KeyA', 'ArrowLeft'],
-    dir: ['KeyD', 'ArrowRight'], chute: ['Space', 'Enter', 'NumpadEnter'],
+    dir: ['KeyD', 'ArrowRight'], chute: ['Space', 'Enter', 'NumpadEnter'], passe: ['KeyE', 'KeyL'],
   };
 
   const limitar = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -111,6 +111,7 @@ const Partida = (() => {
       this.pausado = false;
       this.teclas = new Set();
       this.chutePedido = [false, false];
+      this.passePedido = [false, false];
       this.controlado = [null, null];
       this.cdTroca = [0, 0];
       this.confete = [];
@@ -182,15 +183,19 @@ const Partida = (() => {
 
     tecla(e, apertou) {
       const codigo = e.code;
-      const usadas = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter'];
+      const usadas = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyE', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'NumpadEnter', 'KeyL'];
       if (!usadas.includes(codigo)) return;
       e.preventDefault();
       if (apertou) {
         if (!e.repeat && !this.pausado) {
           if (this.cfg.modo === 'solo') {
             if (TECLAS_SOLO.chute.includes(codigo)) this.chutePedido[0] = true;
+            if (TECLAS_SOLO.passe.includes(codigo)) this.passePedido[0] = true;
           } else {
-            TECLAS.forEach((m, n) => { if (m.chute.includes(codigo)) this.chutePedido[n] = true; });
+            TECLAS.forEach((m, n) => {
+              if (m.chute.includes(codigo)) this.chutePedido[n] = true;
+              if (m.passe.includes(codigo)) this.passePedido[n] = true;
+            });
           }
         }
         this.teclas.add(codigo);
@@ -255,10 +260,11 @@ const Partida = (() => {
       for (const p of this.jogadores) {
         p.cdPega = Math.max(0, p.cdPega - dt);
         p.cdRouba = Math.max(0, p.cdRouba - dt);
-        if (p.humano) this.controleHumano(p);
+        if (p.humano) this.controleHumano(p, dt);
         else this.ia(p, dt);
       }
       this.chutePedido = [false, false];
+      this.passePedido = [false, false];
       this.mover(dt);
       this.atualizarBola(dt);
     }
@@ -288,7 +294,7 @@ const Partida = (() => {
       }
     }
 
-    controleHumano(p) {
+    controleHumano(p, dt) {
       const m = this.cfg.modo === 'solo' ? TECLAS_SOLO : TECLAS[p.time];
       const k = this.teclas;
       const tem = (lista) => lista.some((c) => k.has(c));
@@ -300,11 +306,20 @@ const Partida = (() => {
         p.vx = d.x * HUMANO.vel;
         p.vy = d.y * HUMANO.vel;
         p.dir = d;
+      } else if (p.recebe > 0 && !this.bola.dono) {
+        // depois de um passe, quem recebe vai sozinho até a bola
+        const b = this.bola;
+        this.irPara(p, b.x + b.vx * 0.15, b.y + b.vy * 0.15, HUMANO.vel);
       } else {
         p.vx = 0; p.vy = 0;
       }
-      if (!this.chutePedido[p.time]) return;
+      p.recebe = Math.max(0, (p.recebe || 0) - dt);
       const b = this.bola;
+      if (this.passePedido[p.time] && (b.dono === p || (!b.dono && dist(p, b) < PR + BR + 14 && p.cdPega <= 0))) {
+        this.passar(p);
+        return;
+      }
+      if (!this.chutePedido[p.time]) return;
       if (b.dono === p) {
         this.chutar(p, this.mira(p, p.dir), HUMANO.chute);
       } else if (!b.dono && dist(p, b) < PR + BR + 14 && p.cdPega <= 0) {
@@ -312,6 +327,20 @@ const Partida = (() => {
       } else if (b.dono && b.dono.time !== p.time && b.dono.papel !== 'gk' && dist(p, b.dono) < PR * 2 + 16) {
         this.roubar(p, b.dono, 0.9);
       }
+    }
+
+    // Passe para o colega de linha; o controle vai junto com a bola.
+    passar(p) {
+      const colega = this.jogadores.find((q) => q.time === p.time && q.papel === 'fp' && q !== p);
+      if (!colega) return;
+      const alvo = { x: colega.x + p.sinal * 25, y: colega.y };
+      const forca = limitar(dist(p, alvo) * 1.7, 280, 560);
+      this.chutar(p, normal(alvo.x - p.x, alvo.y - p.y), forca);
+      colega.recebe = 1.2;
+      colega.cdPega = 0;
+      colega.falhou = null;
+      this.controlado[p.time] = colega;
+      this.cdTroca[p.time] = 1;
     }
 
     // Ajuda de mira: se a criança chuta mais ou menos na direção do gol, a bola vai no gol.

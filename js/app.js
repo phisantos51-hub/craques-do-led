@@ -257,17 +257,19 @@
     const [t0, t1] = config.times;
     const wasd = '<div class="grupo-teclas"><div>' + cruz('W', 'A', 'S', 'D') +
       '<div class="legenda-tecla">🏃 Correr</div></div><div>' + tecla('Espaço ⚽', 'larga') +
-      '<div class="legenda-tecla">👟 Chutar</div></div></div>';
+      '<div class="legenda-tecla">👟 Chutar</div></div><div>' + tecla('E') +
+      '<div class="legenda-tecla">🤝 Passar</div></div></div>';
     const setas = '<div class="grupo-teclas"><div>' + cruz('▲', '◀', '▼', '▶') +
       '<div class="legenda-tecla">🏃 Correr</div></div><div>' + tecla('Enter ↵', 'enter') +
-      '<div class="legenda-tecla">👟 Chutar</div></div></div>';
+      '<div class="legenda-tecla">👟 Chutar</div></div><div>' + tecla('L') +
+      '<div class="legenda-tecla">🤝 Passar</div></div></div>';
     let html = '';
     if (config.modo === 'solo') {
       html += painel(t0, '⭐ ' + textoTime(t0), '<div class="duas-opcoes">' + wasd + '<div class="ou">ou</div>' + setas + '</div>');
       html += '<p class="dica-pausa">🔼 A setinha amarela mostra quem você controla. Ela troca sozinha para quem está mais perto da bola!</p>';
     } else if (config.modo === 'dois') {
-      html += painel(t0, '🟡 Jogador 1 — ' + textoTime(t0), wasd);
-      html += painel(t1, '🔵 Jogador 2 — ' + textoTime(t1), setas);
+      html += painel(t0, '🟡 Jogador 1<small>' + textoTime(t0) + '</small>', wasd);
+      html += painel(t1, '🔵 Jogador 2<small>' + textoTime(t1) + '</small>', setas);
       html += '<p class="dica-pausa">🔼 A setinha com o número 1 ou 2 mostra quem cada um controla.</p>';
     } else {
       const passos = config.penaltisDois
