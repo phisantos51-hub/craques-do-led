@@ -27,6 +27,10 @@ Nas partidas:
 
 Antes de jogar, cada criança dá um nome ao time (ou sorteia um com 🎲) e escolhe as cores da camisa e do calção. Todos os times são inventados. Cada time tem meninas e meninos com aparências variadas (🔄 sorteia outros jogadores).
 
+## ♿🎧 Versão para alunos cegos
+
+Na tela inicial, o botão **Versão para alunos cegos** abre uma versão jogada só com o teclado e guiada por voz e sons (com fone de ouvido): **Pênaltis de ouvido** e **Partida com bola de guizo**. Veja o guia em [`acessivel/README.md`](acessivel/README.md).
+
 ## Para o laboratório
 
 - 🔇 **O som começa desligado.** O botão **Som**, no canto de cima, liga o apito e a torcida. Os sons são criados pelo próprio navegador, sem arquivos de áudio.
@@ -43,4 +47,5 @@ js/desenho.js     cores, nomes inventados e o desenho dos jogadores
 js/partida.js     a partida com campo visto de cima
 js/penaltis.js    a disputa de pênaltis
 js/app.js         as telas, as escolhas, a pausa e o resultado
+acessivel/        versão para alunos cegos (veja acessivel/README.md)
 ```

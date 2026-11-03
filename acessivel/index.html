@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Craques do LED - versão para ouvir</title>
+  <meta name="description" content="Versão do Craques do LED para alunos cegos: tudo pelo teclado, com voz e sons.">
+  <link rel="stylesheet" href="estilo.css?v=1">
+</head>
+<body>
+  <!-- Tela inicial: o navegador só deixa falar depois que alguém aperta uma tecla -->
+  <section id="tela-inicio" class="tela ativa">
+    <div class="logo" aria-hidden="true">⚽🎧</div>
+    <h1>Craques do LED</h1>
+    <p class="sub">Versão para ouvir</p>
+    <button id="btn-comecar" class="grande">Aperte <b>ESPAÇO</b> ou <b>ENTER</b> para começar</button>
+    <p class="dica">🎧 Use fone de ouvido. Tudo funciona só pelo teclado.</p>
+    <p id="aviso-voz" class="aviso" hidden>⚠️ Este computador não tem voz em português instalada. Os sons funcionam, mas as falas aparecem só escritas. Para instalar a voz, veja o guia do professor (arquivo acessivel/README.md no GitHub).</p>
+  </section>
+
+  <section id="tela-menu" class="tela">
+    <h2 id="menu-titulo"></h2>
+    <ol id="menu-lista" class="menu"></ol>
+    <p class="dica">⬆️⬇️ escolher &nbsp; · &nbsp; Enter confirmar &nbsp; · &nbsp; Esc voltar</p>
+  </section>
+
+  <section id="tela-roteiro" class="tela">
+    <h2 id="roteiro-titulo"></h2>
+    <p class="dica">Enter ou Esc para voltar ao menu</p>
+  </section>
+
+  <section id="tela-jogo" class="tela">
+    <div id="placar-texto" class="placar"></div>
+    <canvas id="campo" width="300" height="600" hidden></canvas>
+    <div id="painel-penaltis" class="painel-pen" hidden>
+      <div id="pen-vez" class="vez"></div>
+      <div class="linha"><span>Você</span> <span id="pen-voce"></span></div>
+      <div class="linha"><span>Computador</span> <span id="pen-cpu"></span></div>
+    </div>
+    <p class="dica">Esc pausa · B bola · G gol · T placar · R repetir</p>
+  </section>
+
+  <!-- O que a voz está dizendo, escrito bem grande -->
+  <div id="legenda" class="legenda" aria-live="polite"></div>
+
+  <script src="js/voz-sons.js?v=1"></script>
+  <script src="js/penaltis.js?v=1"></script>
+  <script src="js/guizo.js?v=1"></script>
+  <script src="js/app.js?v=1"></script>
+</body>
+</html>
